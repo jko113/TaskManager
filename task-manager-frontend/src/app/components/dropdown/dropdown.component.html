@@ -1,0 +1,17 @@
+<div>
+  <mat-form-field
+    [ngClass]="{
+    'black-dropdown': dropdownColor === 'black',
+    'white-dropdown': dropdownColor === 'white'}"
+  >
+    <mat-label>{{dropdownLabel}}</mat-label>
+    <mat-select
+      [value]="selectedValue"
+      (selectionChange)="selectAction($event)"
+    >
+      <mat-option *ngFor="let option of dropdownOptions" [value]="option.value">
+        {{option.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

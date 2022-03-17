@@ -1,0 +1,31 @@
+.kanbanContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.flexCenter {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.statusGroupingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 33%;
+}
+
+.card {
+  margin: 10px;
+}
+
+.bigText {
+  font-size: 24px;
+}
+
+:host {
+  width: 100%;
+}

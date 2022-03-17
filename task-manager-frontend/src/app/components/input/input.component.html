@@ -1,0 +1,10 @@
+<div>{{inputLabel}}</div>
+<mat-form-field style="display: inline">
+    <input
+        matInput
+        [type]="inputType"
+        [style]="'display:inline;color:'+inputColor"
+        (keyup)="updateField($event)"
+        [ngModel]="inputData"
+    >
+</mat-form-field>

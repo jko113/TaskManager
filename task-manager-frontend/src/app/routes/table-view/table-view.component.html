@@ -1,0 +1,40 @@
+<div [ngClass]="['flexCenter', 'bigText']" *ngIf="items.length === 0">
+  You're all caught up!
+</div>
+
+<div class="container" *ngIf="items.length !== 0">
+    <div class="row">
+      <div class="cell">ID</div>
+      <div class="cell">Name</div>
+      <div class="cell">Description</div>
+      <div class="cell">Completion Status</div>
+      <div class="cell">Action</div>
+    </div>
+    <div class="row" *ngFor="let item of items;">
+      <div class="cell">{{item.id}}</div>
+      <div class="cell">{{item.name}}</div>
+      <div class="cell">{{item.description}}</div>
+      <div class="cell">
+        <app-dropdown
+          dropdownLabel="Status"
+          dropdownColor="white"
+          [dropdownOptions]="statusDropdownOptions"
+          [selectedValue]="item.completionStatus"
+          (selectFromDropdown)="updateDropdownCompletionStatus(item, $event)"
+        >
+        </app-dropdown>
+      </div>
+      <mat-icon
+        [ngClass]="['icon']"
+        color="primary"
+        mat-raised-button
+        (click)="onEdit(item)">edit
+      </mat-icon>
+      <mat-icon
+        [ngClass]="['icon']"
+        color="accent"
+        mat-raised-button
+        (click)="onDelete(item)">delete
+      </mat-icon>
+    </div>
+  </div>

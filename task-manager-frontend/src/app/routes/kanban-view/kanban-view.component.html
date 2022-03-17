@@ -1,0 +1,46 @@
+<div
+    [ngClass]="['flexCenter', 'bigText']"
+    *ngIf="items.length === 0"
+>
+    <span>You're all caught up!</span>
+</div>
+
+<div class="kanbanContainer" *ngIf="items.length !== 0" >
+    <div class="statusGroupingContainer" *ngFor="let status of statusDropdownOptions">
+        <div class="statusGroupTitle">{{status.viewValue}}</div>
+        <div class="container">
+            <div class="cards" *ngFor="let item of items; let i = index">
+                <div class="card" *ngIf="status.value === item.completionStatus">
+                    <mat-card>
+                        <mat-card-title>
+                            Task #{{i + 1}}: {{item.name}}
+                        </mat-card-title>
+                        <mat-card-content>
+                            <div>{{item.description}}</div>
+                        </mat-card-content>
+                        <app-dropdown
+                            selectedValue={{item.completionStatus}}
+                            dropdownLabel="Status"
+                            dropdownColor="black"
+                            [dropdownOptions]="statusDropdownOptions"
+                            (selectFromDropdown)="updateDropdownCompletionStatus(item, $event)"
+                        >
+                    </app-dropdown>
+                        <mat-icon
+                            [ngClass]="['icon']"
+                            color="primary"
+                            mat-raised-button
+                            (click)="onEdit(item)">edit
+                        </mat-icon>
+                        <mat-icon
+                            [ngClass]="['icon']"
+                            color="accent"
+                            mat-raised-button
+                            (click)="onDelete(item)">delete
+                      </mat-icon>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

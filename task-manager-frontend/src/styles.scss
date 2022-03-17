@@ -1,0 +1,24 @@
+
+html, body { height: 100%; }
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.black-dropdown .mat-select-value, 
+.black-dropdown .mat-select-arrow,
+.black-dropdown .mat-form-field-appearance-legacy, 
+.black-dropdown .mat-form-field-label
+{color: #000}
+
+.white-dropdown .mat-select-value, 
+.white-dropdown .mat-select-arrow,
+.white-dropdown .mat-form-field-appearance-legacy, 
+.white-dropdown .mat-form-field-label
+{color: #fff}
+
+.black-dropdown .mat-form-field-underline {
+    background-color: #000;
+}
+
+.white-dropdown .mat-form-field-underline {
+    background-color: #fff;
+}

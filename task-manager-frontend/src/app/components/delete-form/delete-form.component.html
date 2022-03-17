@@ -1,0 +1,20 @@
+<div [ngClass]="['flexCenter','topPadding']">
+    <div>Are you sure you want to delete {{username}}'s item?</div>
+</div>
+<div [ngClass]="['flexCenter']">
+    <app-btn
+        class="deleteFormButton"
+        buttonColor="warn"
+        buttonId="deleteSubmitButton"
+        buttonText="Delete"
+        (clickAction)="confirm()">Delete
+    </app-btn>
+
+    <app-btn
+        class="deleteFormButton"
+        buttonColor="accent"
+        buttonId="deleteCancelButton"
+        buttonText="Cancel"
+        (clickAction)="cancel()">Cancel
+    </app-btn>
+</div>

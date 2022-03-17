@@ -1,0 +1,46 @@
+
+<h2>{{editMode ? 'Edit': 'Create'}} item for {{username}}</h2>
+
+<app-input
+    [inputLabel]="name"
+    (typeAction)="updateField('name',$event)"
+    inputType="text"
+    inputColor="red"
+    [inputData]=" pendingItemData.id ? pendingItemData.name : 'Input name here'"
+>
+</app-input>
+
+<app-input
+    [inputLabel]="description"
+    (typeAction)="updateField('description',$event)"
+    inputType="text"
+    inputColor="blue"
+    [inputData]="pendingItemData.description"
+>
+</app-input>
+
+<app-dropdown
+    *ngIf="editMode"
+    dropdownColor="black"
+    [selectedValue]="pendingItemData.completionStatus"
+    dropdownLabel="Status"
+    [dropdownOptions]="dropdownOptions"
+    (selectFromDropdown)="updateItemCompletionStatus($event.value)">
+</app-dropdown>
+
+<div class="flexCenter">
+    <app-btn
+        (clickAction)="sendNewItemToParent()"
+        class="createOrEditFormButton"
+        buttonColor="warn"
+        buttonText="Submit"
+        buttonId="submitButton">
+    </app-btn>
+    <app-btn
+        (clickAction)="cancel()"
+        class="createOrEditFormButton"
+        buttonColor="accent"
+        buttonText="Cancel"
+        buttonId="cancelButton">
+    </app-btn>
+</div>
