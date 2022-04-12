@@ -8,7 +8,10 @@ import { IItem } from './task-controller.service';
 export class ComponentCommunicatorService {
 
   constructor() {}
-
+  
+  public createItem$: BehaviorSubject<IItem | undefined>
+  = new BehaviorSubject<IItem | undefined>(undefined);
+  
   public editItem$: BehaviorSubject<IItem | undefined> 
   = new BehaviorSubject<IItem | undefined>(undefined);
 

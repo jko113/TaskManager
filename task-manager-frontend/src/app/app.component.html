@@ -1,84 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
 
-<div class="topHeading">Task Manager</div>
+  <div class="topHeading">Task Manager</div>
 
-<div class="flexCenter">
-  <app-btn
-      editMode="false"
-      buttonText="Create New Item"
-      (click)="modalToggle()">
-  </app-btn>
-</div>
-
-<div class="flexCenter">
-  <nav>
-    <button
-      class="toggleViewButton"
-      mat-raised-button>
-      <a routerLink="/table" routerLinkActive="active">Table</a>
-    </button>
-    <button
-      class="toggleViewButton"
-      mat-raised-button>
-      <a routerLink="/kanban" routerLinkActive="active">Kanban</a>
-    </button>
-  </nav>
-</div>
-
-<div id="createOrEditModal">
-  <app-modal 
-    (close)="closeCreateOrEditModal()" 
-    [modalOpen]="createOrEditModalVisibility"
-    [htmlContent]="createOrEditFormTemplate">
-  </app-modal>
-</div>
-
-<ng-template #createOrEditTemplate>
-  <edit-create
-      [editMode]="editMode"
-      [dropdownOptions]="statusDropdownOptions"
-      (createOrEditAction)="createOrEditItem($event)"
-      (cancelAction)="closeCreateOrEditModal()"
-      [username]="username"
-      [pendingItemData]="pendingItemData">
-    </edit-create>
-</ng-template>
-
-<div id="deleteModal">
-  <app-modal
-    (close)="closeDeleteModal()"
-    [modalOpen]="deleteModalVisibility"
-    [htmlContent]="deleteFormTemplate">
-  </app-modal>
-</div>
-
-<ng-template #deleteTemplate>
-  <delete-form
-    [username]="username"
-    (cancelDeletion)="onDeleteSubmit($event)"
-    (confirmDeletion)="onDeleteSubmit($event)"
-    [itemToBeDeleted]="itemToBeDeleted">
-  </delete-form>
-</ng-template>
-
-<div class="flexCenter"><router-outlet></router-outlet></div>
-
-<div class="footer">
-  <div [ngClass]="['flexCenter']" *ngIf="items.length !== 0">
-    <span>There are {{items.length}} items total.
-      <span style="color: red"> {{completedTasksTotal}}</span>
-      of them are done.
-    </span>
+  <div class="flexCenter">
+    <app-btn
+        editMode="false"
+        buttonText="Create New Item"
+        (click)="modalToggle()">
+    </app-btn>
   </div>
-</div>
 
-</body>
+  <div class="flexCenter">
+    <nav>
+      <button
+        class="toggleViewButton"
+        mat-raised-button>
+        <a routerLink="/table" routerLinkActive="active">Table</a>
+      </button>
+      <button
+        class="toggleViewButton"
+        mat-raised-button>
+        <a routerLink="/kanban" routerLinkActive="active">Kanban</a>
+      </button>
+    </nav>
+  </div>
+
+  <div id="createOrEditModal">
+    <app-modal 
+      (close)="closeCreateOrEditModal()" 
+      [modalOpen]="createOrEditModalVisibility"
+      [htmlContent]="createOrEditFormTemplate">
+    </app-modal>
+  </div>
+
+  <ng-template #createOrEditTemplate>
+    <edit-create
+        [editMode]="editMode"
+        [dropdownOptions]="statusDropdownOptions"
+        (createOrEditAction)="createOrEditItem($event)"
+        (cancelAction)="closeCreateOrEditModal()"
+        [username]="username"
+        [pendingItemData]="pendingItemData">
+      </edit-create>
+  </ng-template>
+
+  <div id="deleteModal">
+    <app-modal
+      (close)="closeDeleteModal()"
+      [modalOpen]="deleteModalVisibility"
+      [htmlContent]="deleteFormTemplate">
+    </app-modal>
+  </div>
+
+  <ng-template #deleteTemplate>
+    <delete-form
+      [username]="username"
+      (cancelDeletion)="onDeleteSubmit($event)"
+      (confirmDeletion)="onDeleteSubmit($event)"
+      [itemToBeDeleted]="itemToBeDeleted">
+    </delete-form>
+  </ng-template>
+
+  <div class="flexCenter"><router-outlet></router-outlet></div>
+
+  <div class="footer">
+    <div [ngClass]="['flexCenter']" *ngIf="items.length !== 0">
+      <span>There are {{items.length}} items total.
+        <span style="color: red"> {{completedTasksTotal}}</span>
+        of them are done.
+      </span>
+    </div>
+  </div>
+
+  </body>
 </html>

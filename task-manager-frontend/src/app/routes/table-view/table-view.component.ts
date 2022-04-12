@@ -20,16 +20,32 @@ export class TableViewComponent implements OnInit {
   ];
 
   ngOnInit() {
-    const obs = this.taskService.getTasks();
-    obs.subscribe((value) => {
+    this.taskService.getTasks().subscribe((value) => {
       this.items = value;
+    });
+
+    this.communicatorService.deleteItem$.subscribe((deleteValue) => {
+      this.taskService.getTasks().subscribe((value) => {
+        this.items = value;
+      });
+    });
+
+    this.communicatorService.editItem$.subscribe((editValue) => {
+      this.taskService.getTasks().subscribe((value) => {
+        this.items = value;
+      });
+    });
+
+    this.communicatorService.createItem$.subscribe((createValue) => {
+      this.taskService.getTasks().subscribe((value) => {
+        this.items = value;
+      });
     });
   }
 
   constructor(
     private taskService: TaskControllerService,
     private communicatorService: ComponentCommunicatorService) {
-      //run code when component instantiate e.g make api call or set up variables 
   }
   
   onEdit (item: IItem) {
@@ -42,9 +58,10 @@ export class TableViewComponent implements OnInit {
 
   updateDropdownCompletionStatus(item: IItem, selectEvent: MatSelectChange) {
     const newStatus = selectEvent.value;
-    const itemID = item.id;
     item.completionStatus = newStatus;
-    this.taskService.editTaskCompletionStatusById(itemID, newStatus);
-    this.communicatorService.editItem$.next(undefined);
+
+    this.taskService.editTask(item).subscribe((value) => {
+      if (value) this.communicatorService.editItem$.next(undefined);
+    });
   }
 }

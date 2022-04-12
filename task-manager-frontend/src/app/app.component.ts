@@ -35,7 +35,13 @@ export class AppComponent {
   }
 
   ngOnInit() {
+
     this.calculateCompletedTasks();
+    this.taskService.getTasks().subscribe((value) => {
+      this.items = value;
+    });
+
+
     this.communicatorService.editItem$.subscribe((item) => {
       if (item) {
         this.modalToggle();
@@ -50,11 +56,10 @@ export class AppComponent {
         this.itemToBeDeleted = item;
         this.deleteModalVisibility = true;
       }
+      this.calculateCompletedTasks();
     });
 
-    this.taskService.getTasks().subscribe((value) => {
-      this.items = value;
-    });
+
   }
 
   modalToggle() {
@@ -73,21 +78,35 @@ export class AppComponent {
 
   onDeleteSubmit (item: IItem) {
     if (item.pendingDeletion === true) {
-      this.taskService.deleteTask(item.id);
-      this.taskService.getTasks().subscribe((value) => {
-        this.items = value;
+      this.taskService.deleteTask(item.id).subscribe((deleteValue) => {
+        if (!deleteValue) {throw new Error('deletion failed');}
+        this.taskService.getTasks().subscribe((value) => {
+          this.items = value;
+          this.communicatorService.deleteItem$.next(undefined);
+        });
       });
       this.calculateCompletedTasks();
     }
-
     this.closeDeleteModal();
   }
 
   createOrEditItem (e: IItem) {
     if (this.editMode) {
-      this.taskService.editTask(e);
+      this.taskService.editTask(e).subscribe((editValue) => {
+        if (editValue) {
+          this.taskService.getTasks().subscribe((value) => {
+            this.items = value;
+            this.communicatorService.editItem$.next(undefined);
+          });
+        }
+      });
     } else {
-      this.taskService.createTask(e);
+      this.taskService.createTask(e).subscribe((createValue) => {
+        this.taskService.getTasks().subscribe((value) => {
+          this.items = value;
+          this.communicatorService.createItem$.next(undefined);
+        });
+      });
     }
 
     this.calculateCompletedTasks();
@@ -97,14 +116,16 @@ export class AppComponent {
   }
 
   calculateCompletedTasks () {
-    let runningTotal = 0;
-
-    for (let i = 0; i<this.items.length; i++) {
-      if (this.items[i].completionStatus==="completed") {
-        runningTotal++;
+    this.taskService.getTasks().subscribe((value) => {     
+      this.items = value; 
+      let runningTotal = 0;
+  
+      for (let i = 0; i<this.items.length; i++) {
+        if (this.items[i].completionStatus==="completed") {
+          runningTotal++;
+        }
       }
-    }
-    this.completedTasksTotal = runningTotal;
+      this.completedTasksTotal = runningTotal;
+    });
   }
-
 }
