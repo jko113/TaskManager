@@ -4,5 +4,5 @@ export class DeleteTaskDto {
 
     @IsNotEmpty()
     @IsString()
-    id: string;
+    hexId: string;
 }

@@ -10,7 +10,7 @@ import { IItem } from '../../services/task-controller.service';
 export class DeleteFormComponent implements OnInit {
 
   @Input() username: string = "";
-  @Input() itemToBeDeleted: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", id: "", pendingDeletion: false};
+  @Input() itemToBeDeleted: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", hexId: "", pendingDeletion: false};
   @Input() deletionApproved: boolean = false;
   @Input() deleteModalVisibility: boolean = false;
 

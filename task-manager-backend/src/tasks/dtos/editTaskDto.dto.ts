@@ -16,7 +16,7 @@ export class EditTaskDto {
     
     @IsNotEmpty()
     @IsString()
-    id: string;
+    hexId: string;
     
     @IsNotEmpty()
     @IsBoolean()

@@ -1,75 +1,61 @@
-import { Body, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from 'src/tasks/dtos/createTaskDto.dto';
 import { DeleteTaskDto } from 'src/tasks/dtos/deleteTaskDto.dto';
 import { EditTaskDto } from 'src/tasks/dtos/editTaskDto.dto';
-import { GetSingleTaskDto } from 'src/tasks/dtos/getSingleTaskDto.dto';
-import { Task } from 'src/tasks/types/tasks';
+import { Task as TaskEntity } from 'src/tasks/typeorm';
+import { DeleteResult, InsertResult, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class TasksService {
-    constructor( ) {}
+    constructor(@InjectRepository(TaskEntity) private readonly TaskRepository: Repository<TaskEntity>) {}
 
-    private tasks: Task[] = [{
-        timestamp: "",
-        completionStatus: "notstarted",
-        name: 'do a thing',
-        description: 'lorem ipsum',
-        id: uuidv4().substring(0,8),
-        pendingDeletion: false
-    },
-    {
-        timestamp: "",
-        completionStatus: "inprogress",
-        name: 'do another thing',
-        description: 'lorem ipsum lorem',
-        id: uuidv4().substring(0,8),
-        pendingDeletion: false
-    },
-    {
-        timestamp: "",
-        completionStatus: "completed",
-        name: 'do yet another thing',
-        description: 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
-        id: uuidv4().substring(0,8),
-        pendingDeletion: false
-    }];
-
-    getTasks() {
-        return this.tasks;
-    }
-
-    getTaskById(id: string) {
-        return this.tasks.find((task) => {
-            return id === task.id;
+    getTasks(): Promise<TaskEntity[]> {
+        return this.TaskRepository.find({
+            order: {
+                id: "ASC",
+            }
         });
     }
 
-    createTask(newTask: CreateTaskDto) {
-        const newTaskWithId = {...newTask, id: uuidv4().substring(0,8)}
-        return this.tasks.push(newTaskWithId);
+    async getTaskById(hexId: string): Promise<TaskEntity> {
+        return await this.TaskRepository.findOneOrFail({
+            where: {
+                hexId: hexId
+            }
+        }).catch(err => {
+            throw new HttpException(err, HttpStatus.BAD_REQUEST);
+        });
     }
 
-    editTask(editTask: EditTaskDto) {
-        const editTaskId = editTask.id;
-
-        for (let i = 0; i < this.tasks.length; i++) {
-            if (this.tasks[i].id === editTaskId) {
-                this.tasks[i] = editTask;
-                return true;
-            }
-        }
-        return false;
+    async createTask(newTask: CreateTaskDto): Promise<TaskEntity> {
+        newTask.hexId = uuidv4().substring(0,8);
+        const newTaskObject = this.TaskRepository.create(newTask);
+        return await this.TaskRepository.save(newTaskObject).catch(err => {
+            throw new HttpException(err, HttpStatus.BAD_REQUEST);
+        });
     }
 
-    deleteTask(deleteTask: DeleteTaskDto) {
-
-        for (let i = 0; i < this.tasks.length; i++) {
-            if (deleteTask.id === this.tasks[i].id) {
-                this.tasks.splice(i,1);
-                return true;
+    async editTask(editTask: EditTaskDto): Promise<InsertResult> {
+        await this.getTaskById(editTask.hexId);
+        return await this.TaskRepository.upsert(
+            [editTask],
+            {
+                conflictPaths: ["hexId"],
+                skipUpdateIfNoValuesChanged: true
             }
-        }
-        return false;
+        ).catch(err => {
+            throw new HttpException(err, HttpStatus.BAD_REQUEST);
+        });
+    }
+
+    async deleteTask(deleteTask: DeleteTaskDto): Promise<DeleteResult> {
+        await this.getTaskById(deleteTask.hexId);
+        return await this.TaskRepository.delete(
+            {hexId: deleteTask.hexId}
+        ).catch(err => {
+            throw new HttpException(err, HttpStatus.BAD_REQUEST);
+        })
     }
 }

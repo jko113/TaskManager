@@ -5,6 +5,8 @@ export class CreateTaskDto {
     timestamp: string | null;
 
     completionStatus: string;
+
+    hexId: string | null;
     
     @IsNotEmpty()
     @IsString()

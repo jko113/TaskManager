@@ -8,7 +8,7 @@ export interface IItem {
   completionStatus: string,
   name: string,
   description: string,
-  id: string,
+  hexId: string,
   pendingDeletion: boolean
 }
 
@@ -29,12 +29,12 @@ export class TaskControllerService {
     return this.httpClient.get<IItem>(`http://localhost:1420/api/tasks/getSingleTask/${id}`);
   }
   
-  deleteTask(id: string): Observable<boolean> {
+  deleteTask(hexId: string): Observable<boolean> {
     return this.httpClient.delete<boolean>
-    ('http://localhost:1420/api/tasks/delete', {body: {id: id}});
+    ('http://localhost:1420/api/tasks/delete', {body: {hexId: hexId}});
   } 
 
-  editTask(task: IItem): Observable<any> {
+  editTask(task: IItem): Observable<IItem> {
     return this.httpClient.post<any>('http://localhost:1420/api/tasks/edit', task);
   }
 
@@ -44,7 +44,7 @@ export class TaskControllerService {
       description: task.description,
       timestamp: "",
       completionStatus: "notstarted",
-      id: uuidv4().substring(0,8),
+      hexId: uuidv4().substring(0,8),
       pendingDeletion: false
     }
 

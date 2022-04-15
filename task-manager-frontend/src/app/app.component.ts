@@ -16,9 +16,9 @@ export class AppComponent {
   public createOrEditModalVisibility: boolean = false;
   public deleteModalVisibility: boolean = false;
   public editMode: boolean = false;
-  public pendingItemData: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", id: "", pendingDeletion: false};
-  public internalPendingItemData: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", id: "", pendingDeletion: false};
-  public itemToBeDeleted: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", id: "", pendingDeletion: false};
+  public pendingItemData: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", hexId: "", pendingDeletion: false};
+  public internalPendingItemData: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", hexId: "", pendingDeletion: false};
+  public itemToBeDeleted: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", hexId: "", pendingDeletion: false};
   public items: IItem[] = [];
   @ViewChild('createOrEditTemplate', {read: TemplateRef, static: true}) createOrEditFormTemplate: TemplateRef<void> | null = null;
   @ViewChild('deleteTemplate', {read: TemplateRef, static: true}) deleteFormTemplate: TemplateRef<void> | null = null;
@@ -58,8 +58,6 @@ export class AppComponent {
       }
       this.calculateCompletedTasks();
     });
-
-
   }
 
   modalToggle() {
@@ -69,7 +67,7 @@ export class AppComponent {
   closeCreateOrEditModal () {
     this.createOrEditModalVisibility = false;
     this.editMode = false;
-    this.pendingItemData = {name: "", description: "", timestamp: "", completionStatus: "notstarted", id: "", pendingDeletion: false};
+    this.pendingItemData = {name: "", description: "", timestamp: "", completionStatus: "notstarted", hexId: "", pendingDeletion: false};
   }
 
   closeDeleteModal () {
@@ -78,7 +76,7 @@ export class AppComponent {
 
   onDeleteSubmit (item: IItem) {
     if (item.pendingDeletion === true) {
-      this.taskService.deleteTask(item.id).subscribe((deleteValue) => {
+      this.taskService.deleteTask(item.hexId).subscribe((deleteValue) => {
         if (!deleteValue) {throw new Error('deletion failed');}
         this.taskService.getTasks().subscribe((value) => {
           this.items = value;
@@ -112,7 +110,7 @@ export class AppComponent {
     this.calculateCompletedTasks();
     this.createOrEditModalVisibility = false;
     this.editMode=false;
-    this.pendingItemData = {name: "", description: "", timestamp: "", completionStatus: "notstarted", id: "", pendingDeletion: false};
+    this.pendingItemData = {name: "", description: "", timestamp: "", completionStatus: "notstarted", hexId: "", pendingDeletion: false};
   }
 
   calculateCompletedTasks () {

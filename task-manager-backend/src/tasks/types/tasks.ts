@@ -3,6 +3,6 @@ export interface Task {
     completionStatus: string,
     name: string,
     description: string,
-    id: string,
+    hexId: string,
     pendingDeletion: boolean
 }

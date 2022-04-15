@@ -2,8 +2,9 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, 
 import { CreateTaskDto } from 'src/tasks/dtos/createTaskDto.dto';
 import { DeleteTaskDto } from 'src/tasks/dtos/deleteTaskDto.dto';
 import { EditTaskDto } from 'src/tasks/dtos/editTaskDto.dto';
-import { GetSingleTaskDto } from 'src/tasks/dtos/getSingleTaskDto.dto';
 import { TasksService } from 'src/tasks/services/tasks/tasks.service';
+import { Task as TaskEntity } from 'src/tasks/typeorm';
+import { DeleteResult, InsertResult } from 'typeorm';
 
 @Controller('tasks')
 export class TasksController {
@@ -11,12 +12,12 @@ export class TasksController {
     constructor(private tasksService: TasksService) {}
 
     @Get('')
-    getTasks() {
+    getTasks(): Promise<TaskEntity[]> {
         return this.tasksService.getTasks();
     }
 
     @Get('getSingleTask/:id')
-    getTask(@Param('id') id) {
+    getTask(@Param('id') id): Promise<TaskEntity> {
         const getSingleTask = this.tasksService.getTaskById(id);
         if (getSingleTask) return getSingleTask;
         throw new HttpException('TaskId not found!', HttpStatus.BAD_REQUEST);
@@ -24,28 +25,19 @@ export class TasksController {
 
     @Post('create')
     @UsePipes(ValidationPipe)
-    createTask(@Body() CreateTaskDto: CreateTaskDto) {
+    createTask(@Body() CreateTaskDto: CreateTaskDto): Promise<TaskEntity> {
         return this.tasksService.createTask(CreateTaskDto);
     }
 
     @Post('edit')
     @UsePipes(ValidationPipe)
-    editTask(@Body() EditTaskDto: EditTaskDto) {    
-        if (this.tasksService.editTask(EditTaskDto)) {
-            return this.tasksService.editTask(EditTaskDto)
-        } else {
-            throw new HttpException('TaskId not found!', HttpStatus.BAD_REQUEST);
-        }
+    editTask(@Body() EditTaskDto: EditTaskDto): Promise<InsertResult> {
+        return this.tasksService.editTask(EditTaskDto);
     }
 
     @Delete('delete')
     @UsePipes(ValidationPipe)
-    deleteTask(@Body() DeleteTaskDto: DeleteTaskDto) {
-        const deleteTask = this.tasksService.deleteTask(DeleteTaskDto);
-        if (deleteTask) {
-            return deleteTask;
-        } else {
-            throw new HttpException('TaskId not found', HttpStatus.BAD_REQUEST);
-        }
+    deleteTask(@Body() DeleteTaskDto: DeleteTaskDto): Promise<DeleteResult> {
+        return this.tasksService.deleteTask(DeleteTaskDto);
     }
 }

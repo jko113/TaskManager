@@ -10,11 +10,11 @@ import { IItem } from '../../services/task-controller.service';
 export class EditCreate implements OnInit {
 
   @Input() username: string = "";
-  @Input() pendingItemData: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", id: "", pendingDeletion: false};
+  @Input() pendingItemData: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", hexId: "", pendingDeletion: false};
   @Input() modalVisibility: boolean = false;
   @Input() editMode: boolean = false;
   @Input() dropdownOptions: IDropdownOptions[] = [];
-  private editModePendingItemData: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", id: "", pendingDeletion: false};
+  private editModePendingItemData: IItem = {name: "", description: "", timestamp: "", completionStatus: "notstarted", hexId: "", pendingDeletion: false};
   public name = "name:";
   public description = "description:";
 
